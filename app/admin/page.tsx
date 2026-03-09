@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useStore } from '@/lib/store'
 import { Navigation } from '@/components/navigation'
@@ -30,7 +30,8 @@ interface ParticipacionForm {
   asistencias: number
 }
 
-export default function AdminPage() {
+// ─── Componente interno que usa useSearchParams ───────────────────────────────
+function AdminContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { 
@@ -92,15 +93,12 @@ export default function AdminPage() {
   }
 
   const handleAddToEquipo = (jugadorId: string, equipo: 'A' | 'B') => {
-    // Check if already in a team
     const existing = participacionesForm.find(p => p.jugador_id === jugadorId)
     if (existing) {
-      // Remove from current team
       setParticipacionesForm(prev => prev.filter(p => p.jugador_id !== jugadorId))
-      if (existing.equipo === equipo) return // Just removing
+      if (existing.equipo === equipo) return
     }
     
-    // Add to new team
     setParticipacionesForm(prev => [...prev, {
       jugador_id: jugadorId,
       equipo,
@@ -129,7 +127,6 @@ export default function AdminPage() {
       participacionesForm
     )
     
-    // Reset form
     setPartidoForm({
       fecha: new Date().toISOString().split('T')[0],
       formato: '7v7',
@@ -160,7 +157,6 @@ export default function AdminPage() {
       nominadosSeleccionados
     )
     
-    // Reset form
     setPremioForm({
       nombre_terna: '',
       descripcion: '',
@@ -205,7 +201,6 @@ export default function AdminPage() {
             {/* Jugadores Tab */}
             <TabsContent value="jugadores">
               <div className="grid gap-6 lg:grid-cols-2">
-                {/* Add Player Form */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -239,7 +234,6 @@ export default function AdminPage() {
                   </CardContent>
                 </Card>
 
-                {/* Player List */}
                 <Card>
                   <CardHeader>
                     <CardTitle>Lista de Jugadores</CardTitle>
@@ -292,7 +286,6 @@ export default function AdminPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Match Info */}
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="space-y-2">
                       <Label htmlFor="fecha">Fecha</Label>
@@ -354,9 +347,7 @@ export default function AdminPage() {
                     </div>
                   </div>
 
-                  {/* Team Selection */}
                   <div className="grid gap-6 lg:grid-cols-3">
-                    {/* Available Players */}
                     <div className="space-y-3">
                       <Label>Jugadores Disponibles</Label>
                       <div className="space-y-2 max-h-64 overflow-y-auto p-2 rounded-lg border">
@@ -393,7 +384,6 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    {/* Team A */}
                     <div className="space-y-3">
                       <Label className="text-primary">Equipo A ({equipoA.length})</Label>
                       <div className="space-y-2 p-2 rounded-lg border border-primary/30 bg-primary/5 min-h-64">
@@ -409,49 +399,29 @@ export default function AdminPage() {
                                 {jugador.apodo || jugador.nombre}
                               </span>
                               <div className="flex items-center gap-1">
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles - 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles - 1)}>
                                   <Minus className="h-3 w-3" />
                                 </Button>
                                 <span className="w-6 text-center text-xs">{p.goles}G</span>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles + 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles + 1)}>
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
                               <div className="flex items-center gap-1">
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias - 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias - 1)}>
                                   <Minus className="h-3 w-3" />
                                 </Button>
                                 <span className="w-6 text-center text-xs">{p.asistencias}A</span>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias + 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias + 1)}>
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-destructive"
-                                onClick={() => handleAddToEquipo(p.jugador_id, 'A')}
-                              >
+                              <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive"
+                                onClick={() => handleAddToEquipo(p.jugador_id, 'A')}>
                                 <X className="h-3 w-3" />
                               </Button>
                             </div>
@@ -460,7 +430,6 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    {/* Team B */}
                     <div className="space-y-3">
                       <Label>Equipo B ({equipoB.length})</Label>
                       <div className="space-y-2 p-2 rounded-lg border min-h-64">
@@ -476,49 +445,29 @@ export default function AdminPage() {
                                 {jugador.apodo || jugador.nombre}
                               </span>
                               <div className="flex items-center gap-1">
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles - 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles - 1)}>
                                   <Minus className="h-3 w-3" />
                                 </Button>
                                 <span className="w-6 text-center text-xs">{p.goles}G</span>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles + 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'goles', p.goles + 1)}>
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
                               <div className="flex items-center gap-1">
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias - 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias - 1)}>
                                   <Minus className="h-3 w-3" />
                                 </Button>
                                 <span className="w-6 text-center text-xs">{p.asistencias}A</span>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias + 1)}
-                                >
+                                <Button size="icon" variant="ghost" className="h-6 w-6"
+                                  onClick={() => handleUpdateParticipacion(p.jugador_id, 'asistencias', p.asistencias + 1)}>
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 text-destructive"
-                                onClick={() => handleAddToEquipo(p.jugador_id, 'B')}
-                              >
+                              <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive"
+                                onClick={() => handleAddToEquipo(p.jugador_id, 'B')}>
                                 <X className="h-3 w-3" />
                               </Button>
                             </div>
@@ -617,5 +566,14 @@ export default function AdminPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+// ─── Export default con Suspense boundary ────────────────────────────────────
+export default function AdminPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminContent />
+    </Suspense>
   )
 }
