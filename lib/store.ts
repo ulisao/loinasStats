@@ -6,18 +6,18 @@ import type { Jugador, Partido, Participacion, Premio, Voto, Nominacion } from '
 
 // Mock data for demonstration
 const mockJugadores: Jugador[] = [
-  { id: '1', nombre: 'Carlos García', apodo: 'El Tanque', activo: true },
-  { id: '2', nombre: 'Miguel Rodríguez', apodo: 'Migue', activo: true },
-  { id: '3', nombre: 'Juan Pérez', apodo: null, activo: true },
-  { id: '4', nombre: 'Luis Hernández', apodo: 'Lucho', activo: true },
-  { id: '5', nombre: 'Andrés Martínez', apodo: 'El Loco', activo: true },
-  { id: '6', nombre: 'Pedro Sánchez', apodo: 'Pedrito', activo: true },
-  { id: '7', nombre: 'Roberto Díaz', apodo: 'Rober', activo: true },
-  { id: '8', nombre: 'Fernando López', apodo: 'Fer', activo: true },
-  { id: '9', nombre: 'Alejandro Torres', apodo: 'Alex', activo: true },
-  { id: '10', nombre: 'Diego Ramírez', apodo: 'Dieguito', activo: true },
-  { id: '11', nombre: 'Pablo Morales', apodo: null, activo: true },
-  { id: '12', nombre: 'Sergio Castro', apodo: 'Sergi', activo: true },
+  { id: '1', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '2', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '3', nombre: 'Igger', apodo: null, activo: true },
+  { id: '4', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '5', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '6', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '7', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '8', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '9', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '10', nombre: 'Igger', apodo: 'Igger', activo: true },
+  { id: '11', nombre: 'Igger', apodo: null, activo: true },
+  { id: '12', nombre: 'Igger', apodo: 'Igger', activo: true },
 ]
 
 const mockPartidos: Partido[] = [
